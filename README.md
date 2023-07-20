@@ -49,3 +49,28 @@
   - Original이라고도 사용됨
   - 최로에 가장 먼저 생성된 무언가 또는 원본
 
+## Reactor
+
+- Spring 진영에서 개발한 리액티브 스트림즈의 구현체
+- Java functional API
+  - Reactor에서 publisher와 subscriber 간의 상호 작용은 함수형 프로그래밍 API를 통해 이루어짐
+- Flux[N]
+  - Publisher 타입 중 하나 N개의 데이터를 emit한다.
+- Mono[0|1]
+  - Publisher 타입 중 하나 0또는 1개의 데이터를 emit
+- Well-suited for microservices
+- Backpressure ready network
+  - Publisher로부터 전달받은 데이터를 처리하는 데 과부하가 걸리지 않도록 제어
+  - Publisher로부터 전달 되는 대량의 데이터를 Subscriber가 적절하게 처리하기 위한 제어 방법을 backpressure라고 함.
+
+
+## Cold Sequence, Hot Sequence
+- Cold는 무언가를 새로 시작하고, Hot은 무언가 새로 시작 하지 않는것을 의미함.
+- Cold Sequence는 subscribe하는 시점과 상관없이 데이터를 처음부터 다시 전달 받을 수 있음
+- Hot Sequence는 구독이 발생한 시점 이전의 Publisher로부터 emit된 데이터는 Subscriber가 전달받지 못하고, 구독이 발생한 시점 이후에 emit된 데이터만 전달 받을 수 있음
+- Reactor에서 Hot은 두 가지 의미가 있다고 볼 수 있음
+  - 최초 구독이 발생하기 전까지는 데이터의 emit이 발생하지 않음 (warm up)
+  - 구독 여부와 상관없이 데이터가 emit되는 것 (hot)
+- share(), cache()등의 Operator를 사용해서 Cold Sequence를 Hot Sequence로 변환 가능
+
+
