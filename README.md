@@ -73,4 +73,22 @@
   - 구독 여부와 상관없이 데이터가 emit되는 것 (hot)
 - share(), cache()등의 Operator를 사용해서 Cold Sequence를 Hot Sequence로 변환 가능
 
+## Backpressure
+- Publisher로부터 전달받은 데이터를 안정적으로 처리 하도록 사용
+- Backpressure 처리 방식
+  - BaseSubscriber를 통해서 데이터 요청 개수를 제한 할 수 있음
+  - Strategy 
+    - IGNORE : Backpressure를 사용하지 않음
+    - ERROR : Downstream으로 전달할 데이터가 버퍼에 가득 찰 경우, Exception 발생
+    - DROP : Downstream으로 전달할 데이터가 버퍼에 가득 찰 경우, 버퍼 밖에서 대기하는 먼저 emit된 데이터부터 DROP 시키는 전략
+    - LATEST : Downstream으로 전달할 데이터가 버퍼에 가득 찰 경우, 버퍼 밖에서 대기하는 가장 나중에 emit된 데이터부터 DROP 시키는 전략 
+    - BUFFER : Downstream으로 전달할 데이터가 버퍼에 가득 찰 경우, 버퍼 안에 있는 데이터부터 DROP 시키는 전략
 
+## Sinks
+- Processor의 기능을 개선한 Sinks가 Reactor 3.4.0부터 지원
+- 기존 Processor 관련된 API는 3.5.0부터 완전히 제거될 예정
+- 지금까지는 onNext 같은 signal을 내부적으로 전송해주는 방식이었지만, Sinks는 리액티브 스트림즈의 signal을 프로그래밍적으로 푸시 할 수 있음
+- Reactor에서 프로그래밍 방식으로 signal을 전송하는 가장 일반적인 방법은 generate() Operator나 create() Operator 등을 사용하는 것 (Sinks 지원전부터 사용하던 방식)
+- Sinks와 Operator를 사용하는 전통적 방식의 차이점
+  - generate() Operator나 create() Operator는 싱글스레드 기반
+  - Sinks는 멀티스레드 방식으로 signal을 전송해도 thread safety를 보장함.
