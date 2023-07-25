@@ -92,3 +92,16 @@
 - Sinks와 Operator를 사용하는 전통적 방식의 차이점
   - generate() Operator나 create() Operator는 싱글스레드 기반
   - Sinks는 멀티스레드 방식으로 signal을 전송해도 thread safety를 보장함.
+
+### Sinks의 종류 및 특징
+- Sinks.One
+  - Sinks.one() 메서드를 사용하여 "한 건"의 데이터를 전송하는 방법을 정의
+  - 아무리 많은 수의 데이터를 emit한다고 하더라도 처음 emit한 데이터를 제외한 나머지 데이터들은 drop 된다.
+- Sinks.Many
+  - Sinks.many() 메서드를 사용해서 여러 건의 데이터를 여러 가지 방식으로 전송하는 기능을 정의
+  - Sinks.many()의 경우 Sinks.Many가 아닌 ManySpec을 리턴한다.
+    - One의 경우 단순히 한건의 데이터만 emit하는 한 가지 기능만 가지기 때문에 별도로 Spec을 정의 할 필요가 없음 (DefaultSpec 사용)
+  - ManySpec은 Unicast, Multicast, MulticastReplay로 정의되어 있음.
+    - Unicast : 단 하나의 Subscriber에게만 데이터를 emit
+    - Multicast : 하나 이상의 Subscriber에게 데이터를 emit. 기본적으로 Warm Up 특징을 가지는 Hot Sequence로 동작한다.
+    - MulticastReplay : emit된ㄷ ㅔ이터 중에서 특정 시점으로 되돌린(replay) 데이터부터 emit한다.
