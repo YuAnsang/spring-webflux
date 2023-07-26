@@ -128,3 +128,43 @@
 - parallel
   - Non-Blocking I/O 작업에 최적화 되어 있음.
   - CPU 코어 수 만큼 스레드를 생성
+
+## Context
+- Context는 어떠한 상황에서 그 상황을 처리하기 위한 정보
+- Reactor Sequence의 상태 값을 저장하고 저장된 상태 값을 사용할 수 있음
+- Reactor에서는 Context를 Operator 같은 "Reactor 구성요소 간"에 전파되는 key/value 형태의 저장소라고 정의
+- Subscriber와 매핑되어 구독이 발생하면 구독과 연결된 하나의 Context가 생김
+- contextWriter() Operator를 사용하여 Context에 데이터를 쓸 수 있음
+- deferContextual() Operator를 사용해서 Context의 데이터를 읽을 수 있음
+- transformDeferredContextual() Operator를 사용해서 Operator 체인의 중간 데이터를 읽을 수 있음
+
+### Context의 특징
+- Context는 구독이 발생할 때마다 하나의 Context가 해당 구독에 연결된다.
+```
+Mono<String> mono = Mono.deferContextual(contextView ->
+        Mono.just("Company: " + contextView.get(key1))
+    )
+    .publishOn(Schedulers.parallel());
+
+mono.contextWrite(context -> context.put(key1, "Apple"))
+    .subscribe(data -> log.info("# subscribe1 onNext : {}", data));
+
+mono.contextWrite(context -> context.put(key1, "Microsoft"))
+  .subscribe(data -> log.info("# subscribe2 onNext : {}", data));
+```
+- Context는 Operator 체인의 아래에서 위로 전파된다.
+- 동일한 키에 대한 값을 중복해서 저장하면 가장 위쪽에 위치한 contextWrite()이 저장한 값으로 덮어 쓴다.
+```
+String key1 = "company";
+String key2 = "name";
+
+Mono.deferContextual(contextView ->
+        Mono.just(contextView.get(key1))
+    )
+    .publishOn(Schedulers.parallel())
+    .contextWrite(context -> context.put(key2, "Bill"))
+    .transformDeferredContextual((mono, contextView2) -> mono.map(data -> data + ", " + contextView2.getOrDefault(key2, "Steve")))
+    .contextWrite(context -> context.put(key1, "Apple"))
+    .subscribe(data -> log.info("# subscribe1 onNext : {}", data));
+```
+- Context는 인증 정보 같은 독립성을 가지는 정보를 전송하는데 적합하다.
