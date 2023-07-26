@@ -105,3 +105,26 @@
     - Unicast : 단 하나의 Subscriber에게만 데이터를 emit
     - Multicast : 하나 이상의 Subscriber에게 데이터를 emit. 기본적으로 Warm Up 특징을 가지는 Hot Sequence로 동작한다.
     - MulticastReplay : emit된ㄷ ㅔ이터 중에서 특정 시점으로 되돌린(replay) 데이터부터 emit한다.
+
+## Scheduler
+- Scheduler는 Reactor Sequence의 스레드를 관리를 담당한다.
+- OS에서 사용되는 Scheduler와 비슷한 의미를 가진다.
+  - OS 레벨에서의 Scheduler는 실행도ㅓㅣ는 프로그램인 프로세스를 선택하고 실행하는 등 프로세스의 라이프 사이클을 관리해주는 관리자 역할
+- Scheduler를 사용하여 어떤 스레드에서 무엇을 처리할지를 제어함.
+- Scheduler를 사용하면 코드 자체가 간결해지고, 스레드 제어를 대신해주기 때문에 개발자가 스레드를 직접 제어해야하는 부담에서 벗어 날 수 있음
+- subscribeOn(), publishOn(), parallel()등의 Operator가 있음.
+
+### Scheduler의 종류
+- immediate
+  - 별도 스레드를 추가적으로 생성하지 않고, 현재 스레드에서 작업을 처리할 때 사용
+- single
+  - 스레드 하나만 생성해서 Scheduler가 제거되기 전까지 재사용하는 방식
+- newSingle
+  - 호출할 때마다 ㅅ매번 새로운 스레드 하나를 생성
+- boundedElastic
+  - ExecutorService 기반의 스레드풀을 생성하여 사용하는 방식
+  - 기본적으로 CPU 코어 수 * 10만큼의 스레드 생성
+  - Blocking I/O 작업을 효과적으로 처리하는 방식
+- parallel
+  - Non-Blocking I/O 작업에 최적화 되어 있음.
+  - CPU 코어 수 만큼 스레드를 생성
