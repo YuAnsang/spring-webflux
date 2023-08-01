@@ -29,7 +29,7 @@
 ### 리액티브 스트림즈 관련 용어
 - Signal
   - Publisher와 SUbscriber간에 주고 받은 상호작용
-  - 리액티브 스트림즈의  인터페이스 코드에서 볼 수 이쓴ㄴ onSubscribe, onNext, onComplete 등을 리액티브 스트림즈에서 Signal이라고 표현함
+  - 리액티브 스트림즈의  인터페이스 코드에서 볼 수 있는 onSubscribe, onNext, onComplete 등을 리액티브 스트림즈에서 Signal이라고 표현함
 - Demand
   - Subscriber가 Publisher에게 요청하는 데이터를 의미
   - Publisher가 아직 Subscriber에게 전달하지 않은 Subscriber가 요청한 데이터
@@ -168,3 +168,11 @@ Mono.deferContextual(contextView ->
     .subscribe(data -> log.info("# subscribe1 onNext : {}", data));
 ```
 - Context는 인증 정보 같은 독립성을 가지는 정보를 전송하는데 적합하다.
+
+## Operators
+- 리액티브 프로그래밍은 Operator로 시작해서 Operator로 끝난다고 해도 과언이 아닐정도로 가장 중요한 구성요소
+- Reactor는 상황 마다 어떤 유형의 Operator가 좋은지에 대한 가이드가 어느정도 되어 있음.
+
+### Sequence 생성을 위한 Operator
+- justOrEmpty() : just의 확장형. emit할 데이터가 null일 경우 NPE가 아닌 onComplete Signal 전송
+- fromIterable() : iterable의 구현체를 파라미터로 전달 할 수 있음
