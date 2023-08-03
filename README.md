@@ -176,3 +176,39 @@ Mono.deferContextual(contextView ->
 ### Sequence 생성을 위한 Operator
 - justOrEmpty() : just의 확장형. emit할 데이터가 null일 경우 NPE가 아닌 onComplete Signal 전송
 - fromIterable() : iterable의 구현체를 파라미터로 전달 할 수 있음
+
+## Spring WebFlux
+- Spring 5.0부터 지원하는 리액티브 웹 프레임워크
+- Spring MVC는 Blocking I/O 기반이기 때문에 하나의 요청을 처리하는데, 하나의 스레드를 사용
+- WebFlux는 대용량 요청을 적은 수의 스레드로 안정적으로 처리하기 위해 탄생함
+
+### MVC와의 차이점
+- 서버
+  - MVC: Servlet 기반의 Blocking I/O
+  - WebFlux: Non-Blocking I/O 방식으로 동작하는 Netty등의 서버 엔진에서 동작
+- 서버 API
+  - MVC: Servlet API를 사용
+  - WebFlux: 서버 엔진(Netty, Jetty, Undertow)에서 지원하는 리액티브 스트림즈 어댑터를 통해 리액티브 스트림즈 지원
+- 보안
+  - MVC: Spring Security가 서블릿 컨테이너와 통합
+  - WebFlux: WebFilter를 이용해 Spring Security를 사용
+- 데이터 액세스
+  - MVC: Blocking I/O 방식인 Spring Data JDBC, JPA등을 사용
+  - WebFlux: 데이터 액세스 계층까지 완벽하게 Non-Blocking을 지원 할 수 있도록 Spring Data R2DBC 또는 별도 NoSQL 모듈 사용
+
+### 요청 처리 흐름
+1. HttpHandler가 요청을 받아서 ServerWebExchange를 생성 후 WebFilter 체인으로 전달.
+2. ServerWebExchange는 WebFilter 체인의 전처리 과정을 거쳐서 DispatcherHandler에게 전달.
+3. ServerWebExchange를 처리할 핸들러를 조회 후 핸들러 호출을 HandlerAdapter에게 위임.
+4. HandlerAdapter는 ServerExchange를 처리할 핸들러를 호출.
+5. Controller 또는 HandlerFunction 형태의 핸들러에서 요청 처리 후 응답 리턴
+6. 핸들러로부터 리턴받은 응답을 처리할 HandlerResultHandler를 조회
+7. HandlerResultHandler가 응답 데이터를 처리 후 response로 리턴
+
+### WebFlux의 Non-Blocking 프로세스 구조
+- WebFlux가 스레드 차단 없이 더 많은 요청을 처리 할 수 있는 이유는 이벤트 루프 방식을 사용하기 때문
+- 클라이언트의 요청을 요청 핸들러가 받아서 이벤트 루프에 푸시함.
+- 이벤트 루프는 네트워크, DB 연결 작업등 비용이 드는 작업에 대한 콜백을 등록
+- 작업이 완료되면 완료 이벤트를 이벤트 루프에 푸시
+- 등록한 콜백을 호출해 처리 결과를 전달
+
