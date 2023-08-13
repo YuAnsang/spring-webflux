@@ -1,8 +1,7 @@
-package com.asyu.github.springwebflux.webflux.v1;
+package com.asyu.github.springwebflux.webflux.router.v1;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
-import reactor.core.publisher.Mono;
 
 @Mapper
 public interface BookMapper {
@@ -15,7 +14,4 @@ public interface BookMapper {
 
     BookDto.Response bookToResponse(Book book);
 
-    default Mono<BookDto.Response> bookToBookResponse(Mono<Book> mono) {
-        return mono.flatMap(book -> Mono.just(bookToResponse(book)));
-    }
 }

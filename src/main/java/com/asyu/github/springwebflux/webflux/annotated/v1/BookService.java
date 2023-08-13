@@ -1,4 +1,4 @@
-package com.asyu.github.springwebflux.webflux.v2;
+package com.asyu.github.springwebflux.webflux.annotated.v1;
 
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
@@ -8,19 +8,14 @@ import java.time.LocalDateTime;
 @Service
 public class BookService {
 
-    BookMapper mapper = BookMapper.INSTANCE;
-
-    public Mono<Book> createBook(Mono<BookDto.Post> book) {
+    public Mono<Book> createBook(Book book) {
         // not implement business logic;
-        return book.flatMap(post -> Mono.just(mapper.bookPostToBook(post)));
+        return Mono.just(book);
     }
 
-    public Mono<Book> updateBook(final long bookId, Mono<BookDto.Patch> book) {
+    public Mono<Book> updateBook(Book book) {
         // not implement business logic;
-        return book.flatMap(patch -> {
-            patch.setBookId(bookId);
-            return Mono.just(mapper.bookPatchToBook(patch));
-        });
+        return Mono.just(book);
     }
 
     public Mono<Book> findBook(long bookId) {

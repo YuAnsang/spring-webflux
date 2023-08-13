@@ -1,4 +1,4 @@
-package com.asyu.github.springwebflux.webflux.v1;
+package com.asyu.github.springwebflux.webflux.annotated.v1;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

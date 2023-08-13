@@ -1,4 +1,4 @@
-package com.asyu.github.springwebflux.webflux.v1;
+package com.asyu.github.springwebflux.webflux.annotated.v2;
 
 import lombok.Builder;
 import lombok.Getter;

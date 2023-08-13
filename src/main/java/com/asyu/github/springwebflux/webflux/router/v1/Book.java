@@ -1,4 +1,4 @@
-package com.asyu.github.springwebflux.webflux.v2;
+package com.asyu.github.springwebflux.webflux.router.v1;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

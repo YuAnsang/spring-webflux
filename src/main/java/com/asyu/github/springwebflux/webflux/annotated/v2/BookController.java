@@ -1,4 +1,4 @@
-package com.asyu.github.springwebflux.webflux.v2;
+package com.asyu.github.springwebflux.webflux.annotated.v2;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -7,7 +7,7 @@ import reactor.core.publisher.Mono;
 
 @RequiredArgsConstructor
 @RequestMapping("/v2/books")
-@RestController
+@RestController("bookControllerV2")
 public class BookController {
 
     private final BookService bookService;
