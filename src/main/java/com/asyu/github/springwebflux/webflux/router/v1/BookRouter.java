@@ -13,6 +13,9 @@ public class BookRouter {
     public RouterFunction<?> routeBook(BookHandler handler) {
         return route()
                 .POST("/v3/books", handler::createBook)
+                .PATCH("/v3/books/{book-id}", handler::updateBook)
+                .GET("/v3/books", handler::getBooks)
+                .GET("/v3/books/{book-id}", handler::getBook)
                 .build();
     }
 }
